@@ -6,6 +6,9 @@ import bookShop.dataLayer.Book;
 import bookShop.dataLayer.BookShop;
 import bookShop.dataLayer.Order;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BookDeletor extends BookShopDeletor {
     public BookDeletor() {
     }
@@ -13,13 +16,16 @@ public class BookDeletor extends BookShopDeletor {
     @Override
     public void Delete(BookShop obj) {
         Main.objectLists.AllLists.get(1).remove(obj);
+        List<Order> deleteList = new ArrayList<Order>();
+        Book b = (Book) obj;
         for (BookShop o : Main.objectLists.AllLists.get(5)){
             Order order = (Order)o;
-            System.out.println(order.getBook().toString());
-            Book b = (Book) obj;
             if(order.getBook().equals(b)) {
-                Main.deletorList.BookShopDeletorList.get(5).Delete(order);
+               deleteList.add(order);
             }
+        }
+        for (Order o: deleteList){
+            Main.deletorList.BookShopDeletorList.get(5).Delete(o);
         }
     }
 }

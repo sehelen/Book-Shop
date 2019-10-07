@@ -49,7 +49,7 @@ public class Main extends Application {
 
     @Override
     public void stop() throws Exception {
-        SaveAllData();
+        //SaveAllData();
         super.stop();
     }
 
