@@ -1,7 +1,6 @@
 package bookShop.viewLayer;
 
 import bookShop.Main;
-import bookShop.businessLayer.comparators.AuthorComparator;
 import bookShop.businessLayer.comparators.BookShopComparator;
 import bookShop.businessLayer.creators.BookShopCreator;
 import bookShop.businessLayer.deletors.BookShopDeletor;
@@ -50,6 +49,9 @@ public class Controller {
     @FXML
     private Button btnSave;
 
+    @FXML
+    private Button btnCancel;
+
     private String selectedFieldName;
     private BookShop selectedObject;
     private Integer selectedClass;
@@ -61,6 +63,7 @@ public class Controller {
         choiceBox.setVisible(false);
         textFieldEdit.setVisible(false);
         btnSave.setVisible(false);
+        btnCancel.setVisible(false);
         classListView.setItems(classList);
         classListView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showObjects(newValue));
@@ -72,6 +75,7 @@ public class Controller {
         choiceBox.setVisible(false);
         textFieldEdit.clear();
         btnSave.setVisible(false);
+        btnCancel.setVisible(false);
         propertyTable.setItems(null);
         selectedClass = Main.classNamesArray.indexOf(name);
         ObservableList<BookShop> objList = FXCollections.observableArrayList(Main.objectLists.AllLists.get(selectedClass));
@@ -108,7 +112,6 @@ public class Controller {
 
     @FXML
     private void handleCreateObject(){
-        //int classIndex = classListView.getSelectionModel().getSelectedIndex();
         BookShopCreator newCreator =  Main.factoryList.BookShopCreatorsList.get(selectedClass);
         BookShop newObj = newCreator.Create();
         newCreator.AddToList(newObj);
@@ -117,25 +120,24 @@ public class Controller {
 
     @FXML
     private void handleDeleteObject(){
-        //удаляем из основного списка
-        //удаляем из других списков
         BookShopDeletor deletor = Main.deletorList.BookShopDeletorList.get(selectedClass);
         deletor.Delete(selectedObject);
-        //удаляем из таблицы
-        objListView.getItems().remove(selectedObject);
+        //обновляем view список
+        showObjects(classListView.getSelectionModel().getSelectedItem());
+        //objListView.refresh();
     }
 
     @FXML
     private void handleEditObject() throws NoSuchFieldException{
         Property property = propertyTable.getSelectionModel().getSelectedItem();
         this.selectedFieldName = property.getName();
-        //BookShop obj = objListView.getSelectionModel().getSelectedItem();
         Field field = selectedObject.getClass().getDeclaredField(property.getName());
         Type fieldT = field.getType();
         if (((Class) fieldT).getName().equals("java.lang.String"))
         {
             textFieldEdit.setVisible(true);
             btnSave.setVisible(true);
+            btnCancel.setVisible(true);
         }
         else
         {
@@ -151,6 +153,15 @@ public class Controller {
         choiceBox.setItems(objList);
         choiceBox.setVisible(true);
         btnSave.setVisible(true);
+        btnCancel.setVisible(true);
+    }
+
+    public void clickCancel(){
+        choiceBox.setVisible(false);
+        textFieldEdit.setVisible(false);
+        textFieldEdit.clear();
+        btnSave.setVisible(false);
+        btnCancel.setVisible(false);
     }
 
     public void clickSave(){
@@ -159,6 +170,7 @@ public class Controller {
                 SaveChanges(choiceBox.getValue());
                 choiceBox.setVisible(false);
                 btnSave.setVisible(false);
+                btnCancel.setVisible(false);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             }
@@ -169,6 +181,7 @@ public class Controller {
                 textFieldEdit.setVisible(false);
                 textFieldEdit.clear();
                 btnSave.setVisible(false);
+                btnCancel.setVisible(false);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             }
@@ -176,7 +189,6 @@ public class Controller {
     }
 
     public void SaveChanges(Object value) throws NoSuchFieldException{
-        //BookShop obj = objListView.getSelectionModel().getSelectedItem();
         Field field = selectedObject.getClass().getDeclaredField(selectedFieldName);
         field.setAccessible(true);
         try {
@@ -197,20 +209,32 @@ public class Controller {
     public void clickFind(){
         BookShopSearcher searcher = Main.searcherList.BookShopSearcherList.get(selectedClass);
         Integer index = searcher.Search(textFieldFind.getText());
-        selectedObject = objListView.getItems().get(index);
-        objListView.getSelectionModel().select(index);
-        try {
-            showProperties();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        if (index < 0) {
+            propertyTable.setItems(null);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setHeaderText("No object found");
+            alert.setContentText("Could not find an object by \"" + textFieldFind.getText() + "\"");
+            alert.showAndWait();
         }
+        else{
+            selectedObject = objListView.getItems().get(index);
+            objListView.getSelectionModel().select(index);
+            try {
+                showProperties();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        textFieldFind.clear();
     }
 
     public void clickSort(){
         BookShopComparator comparator = Main.comparatorList.BookShopComparatorList.get(selectedClass);
         comparator.Compare(selectedClass);
         objListView.refresh();
+        showObjects(classListView.getSelectionModel().getSelectedItem());
     }
 }

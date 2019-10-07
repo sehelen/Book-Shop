@@ -31,7 +31,7 @@ public class Main extends Application {
             Arrays.asList(Author.class, Book.class, Client.class, Delivery.class, DeliveryType.class, Order.class, PublishingHouse.class)
     );
     public static ArrayList<String> classNamesArray = new ArrayList<String>(
-            Arrays.asList("Authors", "Books", "Clients", "Deliveries", "Delivery Types", "Orders", "Publishing Houses")
+            Arrays.asList("Авторы", "Книги", "Клиенты", "Доставки", "Виды доставок", "Заказы", "Издательства")
     );
     public static ObservableList<String> classList = FXCollections.observableArrayList(classNamesArray);
 
@@ -49,7 +49,7 @@ public class Main extends Application {
 
     @Override
     public void stop() throws Exception {
-        //SaveAllData();
+        SaveAllData();
         super.stop();
     }
 

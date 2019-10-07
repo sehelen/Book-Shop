@@ -8,7 +8,6 @@ public class Order extends BookShop implements Serializable {
     private String ID;
     private Client Client;
     private Book Book;
-    private Delivery Delivery;
     private String PriceSum;
     private String PaymentMethod;
 
@@ -31,14 +30,6 @@ public class Order extends BookShop implements Serializable {
 
     public void setBook(bookShop.dataLayer.Book book) {
         Book = book;
-    }
-
-    public Delivery getDelivery() {
-        return Delivery;
-    }
-
-    public void setDelivery(Delivery delivery) {
-        Delivery = delivery;
     }
 
     public String  getPriceSum() {
@@ -74,13 +65,12 @@ public class Order extends BookShop implements Serializable {
                 PriceSum.equals(order.PriceSum) &&
                 Client.equals(order.Client) &&
                 Book.equals(order.Book) &&
-                Delivery.equals(order.Delivery) &&
                 PaymentMethod.equals(order.PaymentMethod);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID, Client, Book, Delivery, PriceSum, PaymentMethod);
+        return Objects.hash(ID, Client, Book, PriceSum, PaymentMethod);
     }
 
     @Override
