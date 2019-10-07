@@ -1,0 +1,8 @@
+bookShop
+bookShop.businessLayer
+bookShop.businessLayer.comparators
+bookShop.businessLayer.creators
+bookShop.businessLayer.deletors
+bookShop.businessLayer.seachers
+bookShop.dataLayer
+bookShop.viewLayer

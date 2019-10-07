@@ -31,7 +31,7 @@ public class Main extends Application {
             Arrays.asList(Author.class, Book.class, Client.class, Delivery.class, DeliveryType.class, Order.class, PublishingHouse.class)
     );
     public static ArrayList<String> classNamesArray = new ArrayList<String>(
-            Arrays.asList("Авторы","Книги","Клиенты","Доставки","Типы доставки","Заказы","Издательства")
+            Arrays.asList("Authors", "Books", "Clients", "Deliveries", "Delivery Types", "Orders", "Publishing Houses")
     );
     public static ObservableList<String> classList = FXCollections.observableArrayList(classNamesArray);
 
